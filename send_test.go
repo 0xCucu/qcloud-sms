@@ -1,4 +1,4 @@
-package test
+package qcloudsms_test
 
 import "testing"
 import (
