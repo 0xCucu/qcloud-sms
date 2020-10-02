@@ -106,7 +106,7 @@ func request(options option, callback callbackFunc) (*http.Response, error) {
 	//if err != nil {
 	//	return nil, err
 	//}
-	if callback != nil {
+	if err == nil {
 		return resp, nil
 	}
 	return nil, err
