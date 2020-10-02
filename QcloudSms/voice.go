@@ -1,9 +1,10 @@
 package QcloudSms
 
 import (
+	"errors"
+	"net/http"
 	"net/url"
 	"strconv"
-	"errors"
 )
 
 type promptVoiceSender struct {
@@ -21,13 +22,13 @@ func newPromptVoiceSender(appID int, appKey string) *promptVoiceSender {
 }
 
 //Send 发送语音通知和验证码
-func (s *promptVoiceSender) Send(nationCode int, phoneNumber string, promptType int, msg string, playTimes int, ext string, callback callbackFunc) error {
+func (s *promptVoiceSender) Send(nationCode int, phoneNumber string, promptType int, msg string, playTimes int, ext string, callback callbackFunc) (*http.Response, error) {
 	if playTimes <= 0 {
-		return errors.New("playtimes must great than zero")
+		return nil, errors.New("playtimes must great than zero")
 	}
 	reqUrl, err := url.Parse(s.url)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	random := getRandom()
 	now := getCurrentTime()
@@ -86,13 +87,13 @@ func newCodeVoiceSender(appID int, appKey string) *codeVoiceSender {
 	}
 }
 
-func (s *codeVoiceSender) Send(nationCode int, phoneNumber, msg string, playTimes int, ext string, callback callbackFunc) error {
+func (s *codeVoiceSender) Send(nationCode int, phoneNumber, msg string, playTimes int, ext string, callback callbackFunc) (*http.Response, error) {
 	if playTimes <= 0 {
-		return errors.New("playtimes must great than zero")
+		return nil, errors.New("playtimes must great than zero")
 	}
 	reqUrl, err := url.Parse(s.url)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	random := getRandom()
 	now := getCurrentTime()
@@ -149,13 +150,13 @@ func newTtsVoiceSender(appID int, appKey string) *ttsVoiceSender {
 	}
 }
 
-func (s *ttsVoiceSender) Send(nationCode int, phoneNumber string, templID int, params []string, playTimes int, ext string, callback callbackFunc) error {
+func (s *ttsVoiceSender) Send(nationCode int, phoneNumber string, templID int, params []string, playTimes int, ext string, callback callbackFunc) (*http.Response, error) {
 	if playTimes <= 0 {
-		return errors.New("playtimes must great than zero")
+		return nil, errors.New("playtimes must great than zero")
 	}
 	reqUrl, err := url.Parse(s.url)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	random := getRandom()
 	now := getCurrentTime()
@@ -214,13 +215,13 @@ func newFileVoiceSender(appID int, appKey string) *fileVoiceSender {
 	}
 }
 
-func (s *fileVoiceSender) Send(nationCode int, phoneNumber, fid string, playTimes int, ext string, callback callbackFunc) error {
+func (s *fileVoiceSender) Send(nationCode int, phoneNumber, fid string, playTimes int, ext string, callback callbackFunc) (*http.Response, error) {
 	if playTimes <= 0 {
-		return errors.New("playtimes must great than zero")
+		return nil, errors.New("playtimes must great than zero")
 	}
 	reqUrl, err := url.Parse(s.url)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	random := getRandom()
 	now := getCurrentTime()
@@ -277,9 +278,9 @@ func newVoiceFileUploader(appID int, appKey string) *voiceFileUploader {
 	}
 }
 
-func (u *voiceFileUploader) Upload(fileContent []byte, contentType string, callback callbackFunc) error {
+func (u *voiceFileUploader) Upload(fileContent []byte, contentType string, callback callbackFunc) (*http.Response, error) {
 	if contentType != "mp3" && contentType != "wav" {
-		return errors.New(`contentType is invalid and should be 'mp3' or 'wav'`)
+		return nil, errors.New(`contentType is invalid and should be 'mp3' or 'wav'`)
 	}
 	var Type string
 	if contentType == "wav" {
@@ -290,7 +291,7 @@ func (u *voiceFileUploader) Upload(fileContent []byte, contentType string, callb
 
 	reqUrl, err := url.Parse(u.url)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	random := getRandom()
 	now := getCurrentTime()

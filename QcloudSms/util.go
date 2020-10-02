@@ -1,17 +1,16 @@
 package QcloudSms
 
 import (
+	"bytes"
+	"crypto/sha1"
+	"crypto/sha256"
+	"encoding/hex"
+	"encoding/json"
 	"math"
 	"math/rand"
-	"time"
-	"crypto/sha256"
-	"strconv"
 	"net/http"
-	"encoding/json"
-	"bytes"
-	"io/ioutil"
-	"crypto/sha1"
-	"encoding/hex"
+	"strconv"
+	"time"
 )
 
 type callbackFunc func(error, *http.Response, string)
@@ -76,19 +75,19 @@ func sha1sum(buf []byte) string {
 	return hex.EncodeToString(s.Sum(nil))
 }
 
-func request(options option, callback callbackFunc) error {
+func request(options option, callback callbackFunc) (*http.Response, error) {
 	var err error
 	var rawBody []byte
 	rawBody, err = json.Marshal(options.Body)
 	if err != nil {
-		return nil
+		return nil, err
 	}
 	body := bytes.NewReader(rawBody)
 	url := options.Protocol + `://` + options.Host + options.Path
 	var req *http.Request
 	req, err = http.NewRequest(options.Method, url, body)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	q := req.URL.Query()
 	req.URL.RawQuery = q.Encode()
@@ -99,16 +98,16 @@ func request(options option, callback callbackFunc) error {
 	c := http.Client{}
 	resp, err = c.Do(req)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	defer resp.Body.Close()
-	var data []byte
-	data, err = ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return err
-	}
+	//var data []byte
+	//data, err = ioutil.ReadAll(resp.Body)
+	//if err != nil {
+	//	return nil, err
+	//}
 	if callback != nil {
-		callback(err, resp, string(data))
+		return resp, nil
 	}
-	return err
+	return nil, err
 }
