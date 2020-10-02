@@ -100,7 +100,7 @@ func request(options option, callback callbackFunc) (*http.Response, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
+	//defer resp.Body.Close()
 	//var data []byte
 	//data, err = ioutil.ReadAll(resp.Body)
 	//if err != nil {
