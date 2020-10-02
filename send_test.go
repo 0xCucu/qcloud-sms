@@ -4,6 +4,7 @@ import "testing"
 import (
 	"fmt"
 	"github.com/zhenyangjiang/qcloud-sms/QcloudSms"
+	"io/ioutil"
 	"net/http"
 )
 
