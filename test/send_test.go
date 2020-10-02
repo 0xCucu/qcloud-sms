@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-func TestHelloWorld(t *testing.T) {
+func TestSend(t *testing.T) {
 	qcloudsms, _ := QcloudSms.NewQcloudSms(12312, "xxxx")
 	resp, err := qcloudsms.SmsSingleSender.SendWithParam(86, "xxxx", 375634, []string{"12312"}, "xxxx", "", "", callback)
 	if err == nil {
